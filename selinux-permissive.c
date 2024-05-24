@@ -20,6 +20,7 @@ unsigned int* find_selinux_enforcing(void){
       return (unsigned int*)selinux_temp;
     }
   }
+  return NULL;
 }
 
 static int __init selinux_module_init(void){
